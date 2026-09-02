@@ -4,7 +4,7 @@ export PATH
 
 # System Required: CentOS 7+/Ubuntu 18+/Debian 10+
 # Version: v2.3.2
-# Description: One click Install Trojan Panel server
+# Description: One click Install X Panel server
 # Author: jonssonyan <https://jonssonyan.com>
 # Github: https://github.com/trojanpanel/install-script
 
@@ -66,7 +66,7 @@ init_var() {
   redis_port=6378
   redis_pass=""
 
-  # Trojan Panel Frontend
+  # X Panel Frontend
   TROJAN_PANEL_UI_DATA="/tpdata/trojan-panel-ui/"
   # Nginx
   UI_NGINX_DATA="${TROJAN_PANEL_UI_DATA}nginx/"
@@ -76,7 +76,7 @@ init_var() {
   trojan_panel_ip="127.0.0.1"
   trojan_panel_server_port=8081
 
-  # Trojan Panel Backend
+  # X Panel Backend
   TROJAN_PANEL_DATA="/tpdata/trojan-panel/"
   TROJAN_PANEL_WEBFILE="${TROJAN_PANEL_DATA}webfile/"
   TROJAN_PANEL_LOGS="${TROJAN_PANEL_DATA}logs/"
@@ -84,7 +84,7 @@ init_var() {
   trojan_panel_config_path="${TROJAN_PANEL_DATA}config/config.ini"
   trojan_panel_port=8081
 
-  # Trojan Panel Core
+  # X Panel Core
   TROJAN_PANEL_CORE_DATA="/tpdata/trojan-panel-core/"
   TROJAN_PANEL_CORE_LOGS="${TROJAN_PANEL_CORE_DATA}logs/"
   TROJAN_PANEL_CORE_CONFIG="${TROJAN_PANEL_CORE_DATA}config/"
@@ -159,17 +159,17 @@ mkdir_tools() {
   # Redis
   mkdir -p ${REDIS_DATA}
 
-  # Trojan Panel Frontend
+  # X Panel Frontend
   mkdir -p ${TROJAN_PANEL_UI_DATA}
   # Nginx
   mkdir -p ${UI_NGINX_DATA}
   touch ${UI_NGINX_CONFIG}
 
-  # Trojan Panel Backend
+  # X Panel Backend
   mkdir -p ${TROJAN_PANEL_DATA}
   mkdir -p ${TROJAN_PANEL_LOGS}
 
-  # Trojan Panel Core
+  # X Panel Core
   mkdir -p ${TROJAN_PANEL_CORE_DATA}
   mkdir -p ${TROJAN_PANEL_CORE_LOGS}
 }
@@ -996,7 +996,7 @@ install_redis() {
   fi
 }
 
-# Trojan Panel Frontend Nginx http configuration file
+# X Panel Frontend Nginx http configuration file
 ui_http_config() {
   cat >${UI_NGINX_CONFIG} <<-EOF
 server {
@@ -1022,7 +1022,7 @@ server {
 EOF
 }
 
-# Trojan Panel Frontend Nginx https configuration file
+# X Panel Frontend Nginx https configuration file
 ui_https_config() {
   cat >${UI_NGINX_CONFIG} <<-EOF
 server {
@@ -1067,19 +1067,19 @@ server {
 EOF
 }
 
-# Install Trojan Panel Frontend
+# Install X Panel Frontend
 install_trojan_panel_ui() {
   if [[ -z $(docker ps -a -q -f "name=^trojan-panel-ui$") ]]; then
-    echo_content green "---> Install Trojan Panel Frontend"
+    echo_content green "---> Install X Panel Frontend"
 
-    read -r -p "Please enter the IP address of the Trojan Panel Backend (default: local host): " trojan_panel_ip
+    read -r -p "Please enter the IP address of the X Panel Backend (default: local host): " trojan_panel_ip
     [[ -z "${trojan_panel_ip}" ]] && trojan_panel_ip="127.0.0.1"
-    read -r -p "Please enter the service port of the Trojan Panel Backend (default: 8081): " trojan_panel_server_port
+    read -r -p "Please enter the service port of the X Panel Backend (default: 8081): " trojan_panel_server_port
     [[ -z "${trojan_panel_server_port}" ]] && trojan_panel_server_port=8081
 
-    read -r -p "Please enter the port of the Trojan Panel Frontend (default: 8888): " trojan_panel_ui_port
+    read -r -p "Please enter the port of the X Panel Frontend (default: 8888): " trojan_panel_ui_port
     [[ -z "${trojan_panel_ui_port}" ]] && trojan_panel_ui_port="8888"
-    while read -r -p "Please choose whether to enable https on the Trojan Panel Frontend? (0/off 1/on default: 1): " ui_https; do
+    while read -r -p "Please choose whether to enable https on the X Panel Frontend? (0/off 1/on default: 1): " ui_https; do
       if [[ -z ${ui_https} || ${ui_https} == 1 ]]; then
         install_custom_cert "custom_cert"
         domain=$(cat "${DOMAIN_FILE}")
@@ -1093,38 +1093,38 @@ install_trojan_panel_ui() {
       fi
     done
 
-    docker pull jonssonyan/trojan-panel-ui &&
+    docker pull ghcr.io/howellxuking/x-panel-ui &&
       docker run -d --name trojan-panel-ui --restart always \
         --network=host \
         -v "${UI_NGINX_CONFIG}":"/etc/nginx/conf.d/default.conf" \
         -v ${CERT_PATH}:${CERT_PATH} \
-        jonssonyan/trojan-panel-ui
+        ghcr.io/howellxuking/x-panel-ui
 
     if [[ -n $(docker ps -q -f "name=^trojan-panel-ui$" -f "status=running") ]]; then
-      echo_content skyBlue "---> Trojan Panel Frontend installation completed"
+      echo_content skyBlue "---> X Panel Frontend installation completed"
 
       https_flag=$([[ -z ${ui_https} || ${ui_https} == 1 ]] && echo "https" || echo "http")
       domain_or_ip=$([[ -z ${domain} || "${domain}" == "custom_cert" ]] && echo "ip" || echo "${domain}")
 
       echo_content red "\n=============================================================="
-      echo_content skyBlue "Trojan Panel Frontend installed successfully"
+      echo_content skyBlue "X Panel Frontend installed successfully"
       echo_content yellow "Web management panel address: ${https_flag}://${domain_or_ip}:${trojan_panel_ui_port}"
       echo_content red "\n=============================================================="
     else
-      echo_content red "---> Trojan Panel Frontend installation fails or runs abnormally, please try to repair or uninstall and reinstall"
+      echo_content red "---> X Panel Frontend installation fails or runs abnormally, please try to repair or uninstall and reinstall"
       exit 0
     fi
   else
-    echo_content skyBlue "---> You have installed the Trojan Panel Frontend"
+    echo_content skyBlue "---> You have installed the X Panel Frontend"
   fi
 }
 
-# Install Trojan Panel Backend
+# Install X Panel Backend
 install_trojan_panel() {
   if [[ -z $(docker ps -a -q -f "name=^trojan-panel$") ]]; then
-    echo_content green "---> Install Trojan Panel Backend"
+    echo_content green "---> Install X Panel Backend"
 
-    read -r -p "Please enter the service port of the Trojan Panel Backend (default: 8081): " trojan_panel_port
+    read -r -p "Please enter the service port of the X Panel Backend (default: 8081): " trojan_panel_port
     [[ -z "${trojan_panel_port}" ]] && trojan_panel_port=8081
 
     read -r -p "Please enter the IP address of MariaDB (default: local host): " mariadb_ip
@@ -1157,7 +1157,7 @@ install_trojan_panel() {
 
     docker exec trojan-panel-redis redis-cli -h "${redis_host}" -p "${redis_port}" -a "${redis_pass}" -e "flushall" &>/dev/null
 
-    docker pull jonssonyan/trojan-panel &&
+    docker pull ghcr.io/howellxuking/x-panel &&
       docker run -d --name trojan-panel --restart always \
         --network=host \
         -v ${WEB_PATH}:${TROJAN_PANEL_WEBFILE} \
@@ -1173,33 +1173,33 @@ install_trojan_panel() {
         -e "redis_port=${redis_port}" \
         -e "redis_pass=${redis_pass}" \
         -e "server_port=${trojan_panel_port}" \
-        jonssonyan/trojan-panel
+        ghcr.io/howellxuking/x-panel
 
     if [[ -n $(docker ps -q -f "name=^trojan-panel$" -f "status=running") ]]; then
-      echo_content skyBlue "---> Trojan Panel Backend installation completed"
+      echo_content skyBlue "---> X Panel Backend installation completed"
 
       echo_content red "\n=============================================================="
-      echo_content skyBlue "Trojan Panel Backend installed successfully"
+      echo_content skyBlue "X Panel Backend installed successfully"
       echo_content yellow "MariaDB ${mariadb_user} password (please keep it safe): ${mariadb_pas}"
       echo_content yellow "Redis password (please keep it safe): ${redis_pass}"
       echo_content yellow "System administrator Default username: sysadmin Default password: 123456"
       echo_content yellow "Please log in to the management panel to change the password in time"
       echo_content red "\n=============================================================="
     else
-      echo_content red "---> Trojan Panel Backend installation fails or runs abnormally, please try to repair or uninstall and reinstall"
+      echo_content red "---> X Panel Backend installation fails or runs abnormally, please try to repair or uninstall and reinstall"
       exit 0
     fi
   else
-    echo_content skyBlue "---> You have installed the Trojan Panel Backend"
+    echo_content skyBlue "---> You have installed the X Panel Backend"
   fi
 }
 
-# Install Trojan Panel Core
+# Install X Panel Core
 install_trojan_panel_core() {
   if [[ -z $(docker ps -a -q -f "name=^trojan-panel-core$") ]]; then
-    echo_content green "---> Install Trojan Panel Core"
+    echo_content green "---> Install X Panel Core"
 
-    read -r -p "Please enter the service port of the Trojan Panel Core (default: 8082): " trojan_panel_core_port
+    read -r -p "Please enter the service port of the X Panel Core (default: 8082): " trojan_panel_core_port
     [[ -z "${trojan_panel_core_port}" ]] && trojan_panel_core_port=8082
 
     read -r -p "Please enter the IP address of MariaDB (default: local host): " mariadb_ip
@@ -1265,19 +1265,19 @@ install_trojan_panel_core() {
         -e "server_port=${trojan_panel_core_port}" \
         jonssonyan/trojan-panel-core
     if [[ -n $(docker ps -q -f "name=^trojan-panel-core$" -f "status=running") ]]; then
-      echo_content skyBlue "---> Trojan Panel Core installation completed"
+      echo_content skyBlue "---> X Panel Core installation completed"
     else
-      echo_content red "---> Trojan Panel Core installation fails or runs abnormally, please try to repair or uninstall and reinstall"
+      echo_content red "---> X Panel Core installation fails or runs abnormally, please try to repair or uninstall and reinstall"
       exit 0
     fi
   else
-    echo_content skyBlue "---> You have installed the Trojan Panel Core"
+    echo_content skyBlue "---> You have installed the X Panel Core"
   fi
 }
 
-# Update Trojan Panel database structure
+# Update X Panel database structure
 update_trojan_panel_database() {
-  echo_content skyBlue "---> Update Trojan Panel database structure"
+  echo_content skyBlue "---> Update X Panel database structure"
 
   version_214_215=("v2.1.4")
   if [[ "${version_214_215[*]}" =~ "${trojan_panel_current_version}" ]]; then
@@ -1290,20 +1290,20 @@ update_trojan_panel_database() {
       trojan_panel_current_version="v2.3.0"
   fi
 
-  echo_content skyBlue "---> Trojan Panel database structure update completed"
+  echo_content skyBlue "---> X Panel database structure update completed"
 }
 
-# Update Trojan Panel Core database structure
+# Update X Panel Core database structure
 update_trojan_panel_core_database() {
-  echo_content skyBlue "---> Update Trojan Panel Core database structure"
+  echo_content skyBlue "---> Update X Panel Core database structure"
 
-  echo_content skyBlue "---> Trojan Panel Core database structure update completed"
+  echo_content skyBlue "---> X Panel Core database structure update completed"
 }
 
-# Update Trojan Panel Frontend
+# Update X Panel Frontend
 update_trojan_panel_ui() {
   if [[ -z $(docker ps -a -q -f "name=^trojan-panel-ui$") ]]; then
-    echo_content red "---> Please install the Trojan Panel Frontend first"
+    echo_content red "---> Please install the X Panel Frontend first"
     exit 0
   fi
 
@@ -1313,35 +1313,35 @@ update_trojan_panel_ui() {
     exit 0
   fi
 
-  echo_content yellow "Tip: The current version of the Trojan Panel Frontend (trojan-panel-ui) is ${trojan_panel_ui_current_version} the latest version is ${trojan_panel_ui_latest_version}"
+  echo_content yellow "Tip: The current version of the X Panel Frontend (trojan-panel-ui) is ${trojan_panel_ui_current_version} the latest version is ${trojan_panel_ui_latest_version}"
 
   if [[ "${trojan_panel_ui_current_version}" != "${trojan_panel_ui_latest_version}" ]]; then
-    echo_content green "---> Update Trojan Panel Frontend"
+    echo_content green "---> Update X Panel Frontend"
 
     docker rm -f trojan-panel-ui &&
-      docker rmi -f jonssonyan/trojan-panel-ui
+      docker rmi -f ghcr.io/howellxuking/x-panel-ui
 
-    docker pull jonssonyan/trojan-panel-ui &&
+    docker pull ghcr.io/howellxuking/x-panel-ui &&
       docker run -d --name trojan-panel-ui --restart always \
         --network=host \
         -v "${UI_NGINX_CONFIG}":"/etc/nginx/conf.d/default.conf" \
         -v ${CERT_PATH}:${CERT_PATH} \
-        jonssonyan/trojan-panel-ui
+        ghcr.io/howellxuking/x-panel-ui
 
     if [[ -n $(docker ps -q -f "name=^trojan-panel-ui$" -f "status=running") ]]; then
-      echo_content skyBlue "---> Trojan Panel Frontend update completed"
+      echo_content skyBlue "---> X Panel Frontend update completed"
     else
-      echo_content red "---> Trojan Panel Frontend update fails or runs abnormally, please try to repair or uninstall and reinstall"
+      echo_content red "---> X Panel Frontend update fails or runs abnormally, please try to repair or uninstall and reinstall"
     fi
   else
-    echo_content skyBlue "---> You have installed the latest version of the Trojan Panel Frontend"
+    echo_content skyBlue "---> You have installed the latest version of the X Panel Frontend"
   fi
 }
 
-# Update Trojan Panel Backend
+# Update X Panel Backend
 update_trojan_panel() {
   if [[ -z $(docker ps -a -q -f "name=^trojan-panel$") ]]; then
-    echo_content red "---> Please install the Trojan Panel Backend first"
+    echo_content red "---> Please install the X Panel Backend first"
     exit 0
   fi
 
@@ -1351,10 +1351,10 @@ update_trojan_panel() {
     exit 0
   fi
 
-  echo_content yellow "Tip: The current version of the Trojan Panel Backend (trojan-panel) is ${trojan_panel_current_version} The latest version is ${trojan_panel_latest_version}"
+  echo_content yellow "Tip: The current version of the X Panel Backend (trojan-panel) is ${trojan_panel_current_version} The latest version is ${trojan_panel_latest_version}"
 
   if [[ "${trojan_panel_current_version}" != "${trojan_panel_latest_version}" ]]; then
-    echo_content green "---> Update Trojan Panel Backend"
+    echo_content green "---> Update X Panel Backend"
 
     mariadb_ip=$(get_ini_value ${trojan_panel_config_path} mysql.host)
     mariadb_port=$(get_ini_value ${trojan_panel_config_path} mysql.port)
@@ -1370,9 +1370,9 @@ update_trojan_panel() {
     docker exec trojan-panel-redis redis-cli -h "${redis_host}" -p "${redis_port}" -a "${redis_pass}" -e "flushall" &>/dev/null
 
     docker rm -f trojan-panel &&
-      docker rmi -f jonssonyan/trojan-panel
+      docker rmi -f ghcr.io/howellxuking/x-panel
 
-    docker pull jonssonyan/trojan-panel &&
+    docker pull ghcr.io/howellxuking/x-panel &&
       docker run -d --name trojan-panel --restart always \
         --network=host \
         -v ${WEB_PATH}:${TROJAN_PANEL_WEBFILE} \
@@ -1388,22 +1388,22 @@ update_trojan_panel() {
         -e "redis_port=${redis_port}" \
         -e "redis_pass=${redis_pass}" \
         -e "server_port=${trojan_panel_port}" \
-        jonssonyan/trojan-panel
+        ghcr.io/howellxuking/x-panel
 
     if [[ -n $(docker ps -q -f "name=^trojan-panel$" -f "status=running") ]]; then
-      echo_content skyBlue "---> Trojan Panel backend update completed"
+      echo_content skyBlue "---> X Panel backend update completed"
     else
-      echo_content red "---> Trojan Panel Backend update fails or runs abnormally, please try to repair or uninstall and reinstall"
+      echo_content red "---> X Panel Backend update fails or runs abnormally, please try to repair or uninstall and reinstall"
     fi
   else
-    echo_content skyBlue "---> You have installed the latest version of the Trojan Panel Backend"
+    echo_content skyBlue "---> You have installed the latest version of the X Panel Backend"
   fi
 }
 
-# Update Trojan Panel Core
+# Update X Panel Core
 update_trojan_panel_core() {
   if [[ -z $(docker ps -a -q -f "name=^trojan-panel-core$") ]]; then
-    echo_content red "---> Please install the Trojan Panel Core first"
+    echo_content red "---> Please install the X Panel Core first"
     exit 0
   fi
 
@@ -1413,10 +1413,10 @@ update_trojan_panel_core() {
     exit 0
   fi
 
-  echo_content yellow "Tip: The current version of the Trojan Panel Core (trojan-panel-core) is ${trojan_panel_core_current_version} The latest version is ${trojan_panel_core_latest_version}"
+  echo_content yellow "Tip: The current version of the X Panel Core (trojan-panel-core) is ${trojan_panel_core_current_version} The latest version is ${trojan_panel_core_latest_version}"
 
   if [[ "${trojan_panel_core_current_version}" != "${trojan_panel_core_latest_version}" ]]; then
-    echo_content green "---> Update Trojan Panel Core"
+    echo_content green "---> Update X Panel Core"
 
     mariadb_ip=$(get_ini_value ${trojan_panel_core_config_path} mysql.host)
     mariadb_port=$(get_ini_value ${trojan_panel_core_config_path} mysql.port)
@@ -1467,12 +1467,12 @@ update_trojan_panel_core() {
         jonssonyan/trojan-panel-core
 
     if [[ -n $(docker ps -q -f "name=^trojan-panel-core$" -f "status=running") ]]; then
-      echo_content skyBlue "---> Trojan Panel Core update completed"
+      echo_content skyBlue "---> X Panel Core update completed"
     else
-      echo_content red "---> Trojan Panel Core update fails or runs abnormally, please try to repair or uninstall and reinstall"
+      echo_content red "---> X Panel Core update fails or runs abnormally, please try to repair or uninstall and reinstall"
     fi
   else
-    echo_content skyBlue "---> You have installed the latest version of the Trojan Panel Core"
+    echo_content skyBlue "---> You have installed the latest version of the X Panel Core"
   fi
 }
 
@@ -1532,66 +1532,66 @@ uninstall_redis() {
   fi
 }
 
-# Uninstall Trojan Panel Frontend
+# Uninstall X Panel Frontend
 uninstall_trojan_panel_ui() {
   if [[ -n $(docker ps -a -q -f "name=^trojan-panel-ui$") ]]; then
-    echo_content green "---> Uninstall Trojan Panel Frontend"
+    echo_content green "---> Uninstall X Panel Frontend"
 
     docker rm -f trojan-panel-ui &&
-      docker rmi -f jonssonyan/trojan-panel-ui &&
+      docker rmi -f ghcr.io/howellxuking/x-panel-ui &&
       rm -rf ${TROJAN_PANEL_UI_DATA}
 
-    echo_content skyBlue "---> Trojan Panel Frontend uninstallation completed"
+    echo_content skyBlue "---> X Panel Frontend uninstallation completed"
   else
-    echo_content red "---> Please install the Trojan Panel Frontend first"
+    echo_content red "---> Please install the X Panel Frontend first"
   fi
 }
 
-# Uninstall Trojan Panel Backend
+# Uninstall X Panel Backend
 uninstall_trojan_panel() {
   if [[ -n $(docker ps -a -q -f "name=^trojan-panel$") ]]; then
-    echo_content green "---> Uninstall Trojan Panel Backend"
+    echo_content green "---> Uninstall X Panel Backend"
 
     docker rm -f trojan-panel &&
-      docker rmi -f jonssonyan/trojan-panel &&
+      docker rmi -f ghcr.io/howellxuking/x-panel &&
       rm -rf ${TROJAN_PANEL_DATA}
 
-    echo_content skyBlue "---> Trojan Panel Backend uninstallation completed"
+    echo_content skyBlue "---> X Panel Backend uninstallation completed"
   else
-    echo_content red "---> Please install the Trojan Panel Backend first"
+    echo_content red "---> Please install the X Panel Backend first"
   fi
 }
 
-# Uninstall Trojan Panel Core
+# Uninstall X Panel Core
 uninstall_trojan_panel_core() {
   if [[ -n $(docker ps -a -q -f "name=^trojan-panel-core$") ]]; then
-    echo_content green "---> Uninstall Trojan Panel Core"
+    echo_content green "---> Uninstall X Panel Core"
 
     docker rm -f trojan-panel-core &&
       docker rmi -f jonssonyan/trojan-panel-core &&
       rm -rf ${TROJAN_PANEL_CORE_DATA}
 
-    echo_content skyBlue "---> Trojan Panel Core uninstallation completed"
+    echo_content skyBlue "---> X Panel Core uninstallation completed"
   else
-    echo_content red "---> Please install the Trojan Panel Core first"
+    echo_content red "---> Please install the X Panel Core first"
   fi
 }
 
-# Uninstall all Trojan Panel related containers
+# Uninstall all X Panel related containers
 uninstall_all() {
-  echo_content green "---> Uninstall all Trojan Panel related containers"
+  echo_content green "---> Uninstall all X Panel related containers"
 
   docker rm -f $(docker ps -a -q -f "name=^trojan-panel")
-  docker rmi -f $(docker images | grep "^jonssonyan/trojan-panel" | awk '{print $3}')
+  docker rmi -f $(docker images | grep "^ghcr.io/howellxuking/x-panel" | awk '{print $3}')
   rm -rf ${TP_DATA}
 
-  echo_content skyBlue "---> Uninstall all Trojan Panel related containers completed"
+  echo_content skyBlue "---> Uninstall all X Panel related containers completed"
 }
 
-# Modify Trojan Panel Frontend port
+# Modify X Panel Frontend port
 update_trojan_panel_ui_port() {
   if [[ -n $(docker ps -q -f "name=^trojan-panel-ui$" -f "status=running") ]]; then
-    echo_content green "---> Modify Trojan Panel Frontend port"
+    echo_content green "---> Modify X Panel Frontend port"
 
     trojan_panel_ui_port=$(grep 'listen.*ssl' ${UI_NGINX_CONFIG} | awk '{print $2}')
     if [[ -z "${trojan_panel_ui_port}" ]]; then
@@ -1599,12 +1599,12 @@ update_trojan_panel_ui_port() {
       trojan_panel_ui_port=$(grep -oP 'listen\s+\K\d+' ${UI_NGINX_CONFIG} | awk 'NR==1')
     fi
     if [[ -z "${trojan_panel_ui_port}" ]]; then
-      echo_content red "---> Trojan Panel Frontend port not queried"
+      echo_content red "---> X Panel Frontend port not queried"
       exit 0
     fi
-    echo_content yellow "Tip: The current port of the Trojan Panel Frontend (trojan-panel-ui) is ${trojan_panel_ui_port}"
+    echo_content yellow "Tip: The current port of the X Panel Frontend (trojan-panel-ui) is ${trojan_panel_ui_port}"
 
-    read -r -p "Please enter the new port of the Trojan Panel Frontend (default: 8888): " trojan_panel_ui_port
+    read -r -p "Please enter the new port of the X Panel Frontend (default: 8888): " trojan_panel_ui_port
     [[ -z "${trojan_panel_ui_port}" ]] && trojan_panel_ui_port="8888"
 
     if [[ ${ui_https} == 0 ]]; then
@@ -1620,12 +1620,12 @@ update_trojan_panel_ui_port() {
     fi
 
     if [[ "$?" == "0" ]]; then
-      echo_content skyBlue "---> Trojan Panel Frontend port modification completed"
+      echo_content skyBlue "---> X Panel Frontend port modification completed"
     else
-      echo_content red "---> Trojan Panel Frontend port modification failed"
+      echo_content red "---> X Panel Frontend port modification failed"
     fi
   else
-    echo_content red "---> The Trojan Panel Frontend is not installed or is running abnormally, please repair or uninstall and reinstall and try again"
+    echo_content red "---> The X Panel Frontend is not installed or is running abnormally, please repair or uninstall and reinstall and try again"
   fi
 }
 
@@ -1713,7 +1713,7 @@ forget_pass() {
         echo_content yellow "MariaDB ${mariadb_user} password (please keep it safe): ${mariadb_pas}"
         echo_content red "\n=============================================================="
       else
-        echo_content red "---> Please execute on the Trojan Panel backend server"
+        echo_content red "---> Please execute on the X Panel backend server"
       fi
       ;;
     2)
@@ -1723,7 +1723,7 @@ forget_pass() {
         echo_content yellow "Redis password (please keep it safe): ${redis_pass}"
         echo_content red "\n=============================================================="
       else
-        echo_content red "---> Please execute on the Trojan Panel backend server"
+        echo_content red "---> Please execute on the X Panel backend server"
       fi
       ;;
     3)
@@ -1795,7 +1795,7 @@ failure_testing() {
       docker logs trojan-panel-redis
     fi
     if [[ -n $(docker ps -a -q -f "name=^trojan-panel$") && -z $(docker ps -q -f "name=^trojan-panel$" -f "status=running") ]]; then
-      echo_content red "---> The Trojan Panel Backend is running abnormally and the running log is as follows:"
+      echo_content red "---> The X Panel Backend is running abnormally and the running log is as follows:"
       if [[ -f ${TROJAN_PANEL_LOGS}trojan-panel.log ]]; then
         tail -n 20 ${TROJAN_PANEL_LOGS}trojan-panel.log | grep error
       else
@@ -1803,11 +1803,11 @@ failure_testing() {
       fi
     fi
     if [[ -n $(docker ps -a -q -f "name=^trojan-panel-ui$") && -z $(docker ps -q -f "name=^trojan-panel-ui$" -f "status=running") ]]; then
-      echo_content red "---> The Trojan Panel Frontend is running abnormally and the running log is as follows:"
+      echo_content red "---> The X Panel Frontend is running abnormally and the running log is as follows:"
       docker logs trojan-panel-ui
     fi
     if [[ -n $(docker ps -a -q -f "name=^trojan-panel-core$") && -z $(docker ps -q -f "name=^trojan-panel-core$" -f "status=running") ]]; then
-      echo_content red "---> The Trojan Panel Core is running abnormally and the running log is as follows:"
+      echo_content red "---> The X Panel Core is running abnormally and the running log is as follows:"
       if [[ -f ${TROJAN_PANEL_CORE_LOGS}trojan-panel.log ]]; then
         tail -n 20 ${TROJAN_PANEL_CORE_LOGS}trojan-panel.log | grep error
       else
@@ -1821,8 +1821,8 @@ failure_testing() {
 log_query() {
   while :; do
     echo_content skyBlue "Applications that can query logs are as follows:"
-    echo_content yellow "1. Trojan Panel Backend"
-    echo_content yellow "2. Trojan Panel Frontend"
+    echo_content yellow "1. X Panel Backend"
+    echo_content yellow "2. X Panel Frontend"
     echo_content yellow "3. Quit"
     read -r -p "Please select an application (default: 3): " select_log_query_type
     [[ -z "${select_log_query_type}" ]] && select_log_query_type=3
@@ -1858,15 +1858,15 @@ log_query() {
 version_query() {
   if [[ -n $(docker ps -a -q -f "name=^trojan-panel-ui$") && -n $(docker ps -q -f "name=^trojan-panel-ui$" -f "status=running") ]]; then
     trojan_panel_ui_current_version=$(docker exec trojan-panel-ui cat ${TROJAN_PANEL_UI_DATA}version)
-    echo_content yellow "The current version of Trojan Panel Frontend(trojan-panel-ui) is ${trojan_panel_ui_current_version} the latest version is ${trojan_panel_ui_latest_version}"
+    echo_content yellow "The current version of X Panel Frontend(trojan-panel-ui) is ${trojan_panel_ui_current_version} the latest version is ${trojan_panel_ui_latest_version}"
   fi
   if [[ -n $(docker ps -a -q -f "name=^trojan-panel$") && -n $(docker ps -q -f "name=^trojan-panel$" -f "status=running") ]]; then
     trojan_panel_current_version=$(docker exec trojan-panel ./trojan-panel -version)
-    echo_content yellow "The current version of Trojan Panel Backend(trojan-panel) is ${trojan_panel_current_version} the latest version is ${trojan_panel_latest_version}"
+    echo_content yellow "The current version of X Panel Backend(trojan-panel) is ${trojan_panel_current_version} the latest version is ${trojan_panel_latest_version}"
   fi
   if [[ -n $(docker ps -a -q -f "name=^trojan-panel-core$") && -n $(docker ps -q -f "name=^trojan-panel-core$" -f "status=running") ]]; then
     trojan_panel_core_current_version=$(docker exec trojan-panel-core ./trojan-panel-core -version)
-    echo_content yellow "The current version of Trojan Panel Core(trojan-panel-core) is ${trojan_panel_core_current_version} the latest version is ${trojan_panel_core_latest_version}"
+    echo_content yellow "The current version of X Panel Core(trojan-panel-core) is ${trojan_panel_core_current_version} the latest version is ${trojan_panel_core_latest_version}"
   fi
 }
 
@@ -1880,33 +1880,33 @@ main() {
   echo_content red "\n=============================================================="
   echo_content skyBlue "System Required: CentOS 7+/Ubuntu 18+/Debian 10+"
   echo_content skyBlue "Version: v2.3.2"
-  echo_content skyBlue "Description: One click Install Trojan Panel server"
+  echo_content skyBlue "Description: One click Install X Panel server"
   echo_content skyBlue "Author: jonssonyan <https://jonssonyan.com>"
-  echo_content skyBlue "Github: https://github.com/trojanpanel"
-  echo_content skyBlue "Docs: https://trojanpanel.github.io"
+  echo_content skyBlue "Github: https://github.com/howellxuKing"
+  echo_content skyBlue "Docs: https://github.com/howellxuKing"
   echo_content red "\n=============================================================="
-  echo_content yellow "1. Install Trojan Panel Frontend"
-  echo_content yellow "2. Install Trojan Panel Backend"
-  echo_content yellow "3. Install Trojan Panel Core"
+  echo_content yellow "1. Install X Panel Frontend"
+  echo_content yellow "2. Install X Panel Backend"
+  echo_content yellow "3. Install X Panel Core"
   echo_content yellow "4. Install Caddy2+https"
   echo_content yellow "5. Install Nginx"
   echo_content yellow "6. Install MariaDB"
   echo_content yellow "7. Install Redis"
   echo_content green "\n=============================================================="
-  echo_content yellow "8. Update Trojan Panel Frontend"
-  echo_content yellow "9. Update Trojan Panel Backend"
-  echo_content yellow "10. Update Trojan Panel Core"
+  echo_content yellow "8. Update X Panel Frontend"
+  echo_content yellow "9. Update X Panel Backend"
+  echo_content yellow "10. Update X Panel Core"
   echo_content green "\n=============================================================="
-  echo_content yellow "11. Uninstall Trojan Panel Frontend"
-  echo_content yellow "12. Uninstall Trojan Panel Backend"
-  echo_content yellow "13. Uninstall Trojan Panel Core"
+  echo_content yellow "11. Uninstall X Panel Frontend"
+  echo_content yellow "12. Uninstall X Panel Backend"
+  echo_content yellow "13. Uninstall X Panel Core"
   echo_content yellow "14. Uninstall Caddy2+https"
   echo_content yellow "15. Uninstall Nginx"
   echo_content yellow "16. Uninstall MariaDB"
   echo_content yellow "17. Uninstall Redis"
-  echo_content yellow "18. Uninstall all Trojan Panel related containers"
+  echo_content yellow "18. Uninstall all X Panel related containers"
   echo_content green "\n=============================================================="
-  echo_content yellow "19. Modify Trojan Panel Frontend port"
+  echo_content yellow "19. Modify X Panel Frontend port"
   echo_content yellow "20. Refresh Redis cache"
   echo_content yellow "21. Replace certificate"
   echo_content yellow "22. Forgot sysadmin password"

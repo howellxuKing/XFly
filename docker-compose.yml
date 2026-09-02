@@ -32,7 +32,7 @@ services:
     command: redis-server --requirepass ${redis_pass} --port 6378
 
   trojan-panel:
-    image: jonssonyan/trojan-panel
+    image: ghcr.io/howellxuking/x-panel
     container_name: trojan-panel
     restart: always
     network_mode: host
@@ -53,7 +53,7 @@ services:
       - "server_port=8081"
 
   trojan-panel-ui:
-    image: jonssonyan/trojan-panel-ui
+    image: ghcr.io/howellxuking/x-panel-ui
     container_name: trojan-panel-ui
     restart: always
     network_mode: host

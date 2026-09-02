@@ -900,7 +900,7 @@ uninstall_all() {
   echo_content green "---> Uninstall all Trojan Panel related containers"
 
   docker rm -f $(docker ps -a -q -f "name=^trojan-panel")
-  docker rmi -f $(docker images | grep "^jonssonyan/trojan-panel" | awk '{print $3}')
+  docker rmi -f $(docker images | grep "^ghcr.io/howellxuking/x-panel\|^jonssonyan/trojan-panel-core" | awk '{print $3}')
   rm -rf ${TP_DATA}
 
   echo_content skyBlue "---> Uninstall all Trojan Panel related containers completed"
