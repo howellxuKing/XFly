@@ -1,7 +1,7 @@
 <div align="center">
 <img src="https://raw.githubusercontent.com/howellxuKing/x-panel-ui/main/public/logo.png" width="120" alt="X Panel" />
-<h1>X Panel Install Script</h1>
-<p>X Panel 一键安装脚本（基于 Trojan Panel install-script 定制）</p>
+<h1>XFly</h1>
+<p>XFly — X Panel 一键安装脚本（基于 Trojan Panel install-script 定制）</p>
 </div>
 
 ## 支持系统
@@ -11,7 +11,7 @@ CentOS 7+ / Ubuntu 18+ / Debian 10+（x86_64 / arm64）
 ## 一键安装
 
 ```bash
-source <(curl -L https://raw.githubusercontent.com/howellxuKing/install-script/main/install_script.sh)
+source <(curl -L https://raw.githubusercontent.com/howellxuKing/xfly/main/install_script.sh)
 ```
 
 按提示依次选择：
