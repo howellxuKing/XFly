@@ -3,7 +3,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
 # System Required: CentOS 7+/Ubuntu 18+/Debian 10+
-# Version: v2.3.2
+# Version: v2.3.4
 # Description: One click Install X Panel server
 # Author: jonssonyan <https://jonssonyan.com>
 # Github: https://github.com/trojanpanel/install-script
@@ -98,7 +98,7 @@ init_var() {
   trojan_panel_ui_current_version=""
   trojan_panel_ui_latest_version="v2.3.0"
   trojan_panel_current_version=""
-  trojan_panel_latest_version="v2.3.2"
+  trojan_panel_latest_version="v2.3.4"
   trojan_panel_core_current_version=""
   trojan_panel_core_latest_version="v2.3.1"
 
@@ -1879,7 +1879,7 @@ main() {
   clear
   echo_content red "\n=============================================================="
   echo_content skyBlue "System Required: CentOS 7+/Ubuntu 18+/Debian 10+"
-  echo_content skyBlue "Version: v2.3.2"
+  echo_content skyBlue "Version: v2.3.4"
   echo_content skyBlue "Description: One click Install X Panel server"
   echo_content skyBlue "Author: jonssonyan <https://jonssonyan.com>"
   echo_content skyBlue "Github: https://github.com/howellxuKing"

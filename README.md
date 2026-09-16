@@ -4,6 +4,8 @@
 <p>XFly — X Panel 一键安装脚本（基于 Trojan Panel install-script 定制）</p>
 </div>
 
+当前脚本版本：**v2.3.4**。
+
 ## 支持系统
 
 CentOS 7+ / Ubuntu 18+ / Debian 10+（x86_64 / arm64）
@@ -34,6 +36,8 @@ source <(curl -L https://raw.githubusercontent.com/howellxuKing/xfly/main/instal
 - Nginx / Caddy2（证书 + 伪装） / MariaDB / Redis
 
 > 版本检查机制：后端版本与脚本内置 `latest_version` 比对，不一致才会执行更新。改代码后请同步升级版本号，否则「更新后端」会提示已是最新。
+
+从 v2.3.3 升级到 v2.3.4 时，在菜单选择 **9** 即可更新后端和内置分流规则，无需重新安装服务器。管理员已经修改过的 Clash 规则会保留。
 
 ## 客户端接入（Clash Verge）
 
