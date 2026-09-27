@@ -1313,7 +1313,7 @@ update_trojan_panel_ui() {
     exit 0
   fi
 
-  echo_content yellow "Tip: The current version of the XWarp Frontend (trojan-panel-ui) is ${trojan_panel_ui_current_version} the latest version is ${trojan_panel_ui_latest_version}"
+  echo_content yellow "Tip: The current version of the XWarp Frontend is ${trojan_panel_ui_current_version} the latest version is ${trojan_panel_ui_latest_version}"
 
   if [[ "${trojan_panel_ui_current_version}" != "${trojan_panel_ui_latest_version}" ]]; then
     echo_content green "---> Update XWarp Frontend"
@@ -1351,7 +1351,7 @@ update_trojan_panel() {
     exit 0
   fi
 
-  echo_content yellow "Tip: The current version of the XWarp Backend (trojan-panel) is ${trojan_panel_current_version} The latest version is ${trojan_panel_latest_version}"
+  echo_content yellow "Tip: The current version of the XWarp Backend is ${trojan_panel_current_version} The latest version is ${trojan_panel_latest_version}"
 
   if [[ "${trojan_panel_current_version}" != "${trojan_panel_latest_version}" ]]; then
     echo_content green "---> Update XWarp Backend"
@@ -1413,7 +1413,7 @@ update_trojan_panel_core() {
     exit 0
   fi
 
-  echo_content yellow "Tip: The current version of the XWarp Core (trojan-panel-core) is ${trojan_panel_core_current_version} The latest version is ${trojan_panel_core_latest_version}"
+  echo_content yellow "Tip: The current version of the XWarp Core is ${trojan_panel_core_current_version} The latest version is ${trojan_panel_core_latest_version}"
 
   if [[ "${trojan_panel_core_current_version}" != "${trojan_panel_core_latest_version}" ]]; then
     echo_content green "---> Update XWarp Core"
@@ -1602,7 +1602,7 @@ update_trojan_panel_ui_port() {
       echo_content red "---> XWarp Frontend port not queried"
       exit 0
     fi
-    echo_content yellow "Tip: The current port of the XWarp Frontend (trojan-panel-ui) is ${trojan_panel_ui_port}"
+    echo_content yellow "Tip: The current port of the XWarp Frontend is ${trojan_panel_ui_port}"
 
     read -r -p "Please enter the new port of the XWarp Frontend (default: 8888): " trojan_panel_ui_port
     [[ -z "${trojan_panel_ui_port}" ]] && trojan_panel_ui_port="8888"
@@ -1858,15 +1858,15 @@ log_query() {
 version_query() {
   if [[ -n $(docker ps -a -q -f "name=^trojan-panel-ui$") && -n $(docker ps -q -f "name=^trojan-panel-ui$" -f "status=running") ]]; then
     trojan_panel_ui_current_version=$(docker exec trojan-panel-ui cat ${TROJAN_PANEL_UI_DATA}version)
-    echo_content yellow "The current version of XWarp Frontend(trojan-panel-ui) is ${trojan_panel_ui_current_version} the latest version is ${trojan_panel_ui_latest_version}"
+    echo_content yellow "The current version of XWarp Frontend is ${trojan_panel_ui_current_version} the latest version is ${trojan_panel_ui_latest_version}"
   fi
   if [[ -n $(docker ps -a -q -f "name=^trojan-panel$") && -n $(docker ps -q -f "name=^trojan-panel$" -f "status=running") ]]; then
     trojan_panel_current_version=$(docker exec trojan-panel ./trojan-panel -version)
-    echo_content yellow "The current version of XWarp Backend(trojan-panel) is ${trojan_panel_current_version} the latest version is ${trojan_panel_latest_version}"
+    echo_content yellow "The current version of XWarp Backend is ${trojan_panel_current_version} the latest version is ${trojan_panel_latest_version}"
   fi
   if [[ -n $(docker ps -a -q -f "name=^trojan-panel-core$") && -n $(docker ps -q -f "name=^trojan-panel-core$" -f "status=running") ]]; then
     trojan_panel_core_current_version=$(docker exec trojan-panel-core ./trojan-panel-core -version)
-    echo_content yellow "The current version of XWarp Core(trojan-panel-core) is ${trojan_panel_core_current_version} the latest version is ${trojan_panel_core_latest_version}"
+    echo_content yellow "The current version of XWarp Core is ${trojan_panel_core_current_version} the latest version is ${trojan_panel_core_latest_version}"
   fi
 }
 
