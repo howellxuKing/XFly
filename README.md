@@ -1,10 +1,10 @@
 <div align="center">
-<img src="https://raw.githubusercontent.com/howellxuKing/x-panel-ui/main/public/logo.png" width="120" alt="X Panel" />
+<img src="https://raw.githubusercontent.com/howellxuKing/x-panel-ui/main/public/logo.png" width="120" alt="XWarp" />
 <h1>XFly</h1>
-<p>XFly — X Panel 一键安装脚本（基于 Trojan Panel install-script 定制）</p>
+<p>XFly — XWarp 一键安装脚本（基于 Trojan Panel install-script 定制）</p>
 </div>
 
-当前脚本版本：**v2.3.4**。
+当前脚本版本：**v2.4.0**。
 
 ## 支持系统
 
@@ -20,9 +20,9 @@ source <(curl -L https://raw.githubusercontent.com/howellxuKing/xfly/main/instal
 
 | 选项 | 功能 |
 |---|---|
-| **1** | 安装 X Panel 前端 UI（Nginx + 证书 + 伪装站） |
-| **2** | 安装 X Panel 后端 API |
-| **3** | 安装 X Panel Core（代理内核：Xray / Trojan-Go / Hysteria / Hysteria2 / NaiveProxy） |
+| **1** | 安装 XWarp 前端 UI（Nginx + 证书 + 伪装站） |
+| **2** | 安装 XWarp 后端 API |
+| **3** | 安装 XWarp Core（代理内核：Xray / Trojan-Go / Hysteria / Hysteria2 / NaiveProxy） |
 | **8 / 9** | 更新 前端 / 后端 |
 | **22** | 重置管理员密码 |
 
@@ -30,8 +30,8 @@ source <(curl -L https://raw.githubusercontent.com/howellxuKing/xfly/main/instal
 
 ## 安装内容
 
-- X Panel UI：`ghcr.io/howellxuking/x-panel-ui`
-- X Panel Backend：`ghcr.io/howellxuking/x-panel`
+- XWarp UI：`ghcr.io/howellxuking/x-panel-ui`
+- XWarp Backend：`ghcr.io/howellxuking/x-panel`
 - Core（内核）：`jonssonyan/trojan-panel-core`
 - Nginx / Caddy2（证书 + 伪装） / MariaDB / Redis
 
