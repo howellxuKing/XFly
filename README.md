@@ -1,7 +1,7 @@
 <div align="center">
 <img src="https://raw.githubusercontent.com/howellxuKing/x-panel-ui/main/public/logo.png" width="120" alt="XWarp" />
-<h1>XFly</h1>
-<p>XFly — XWarp 一键安装脚本（基于 Trojan Panel install-script 定制）</p>
+<h1>XWarp</h1>
+<p>XWarp 一键安装脚本 —— 一条命令部署面板（后端 / 前端 / 内核 / 证书 / 伪装站）</p>
 </div>
 
 当前脚本版本：**v2.4.0**。
