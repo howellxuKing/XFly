@@ -98,7 +98,7 @@ init_var() {
   trojan_panel_ui_current_version=""
   trojan_panel_ui_latest_version="v2.4.0"
   trojan_panel_current_version=""
-  trojan_panel_latest_version="v2.4.0"
+  trojan_panel_latest_version="v2.4.1"
   trojan_panel_core_current_version=""
   trojan_panel_core_latest_version="v2.3.1"
 
@@ -1093,12 +1093,12 @@ install_trojan_panel_ui() {
       fi
     done
 
-    docker pull ghcr.io/howellxuking/x-panel-ui &&
+    docker pull ghcr.io/howellxuking/xwarp-ui &&
       docker run -d --name trojan-panel-ui --restart always \
         --network=host \
         -v "${UI_NGINX_CONFIG}":"/etc/nginx/conf.d/default.conf" \
         -v ${CERT_PATH}:${CERT_PATH} \
-        ghcr.io/howellxuking/x-panel-ui
+        ghcr.io/howellxuking/xwarp-ui
 
     if [[ -n $(docker ps -q -f "name=^trojan-panel-ui$" -f "status=running") ]]; then
       echo_content skyBlue "---> XWarp Frontend installation completed"
@@ -1157,7 +1157,7 @@ install_trojan_panel() {
 
     docker exec trojan-panel-redis redis-cli -h "${redis_host}" -p "${redis_port}" -a "${redis_pass}" -e "flushall" &>/dev/null
 
-    docker pull ghcr.io/howellxuking/x-panel &&
+    docker pull ghcr.io/howellxuking/xwarp &&
       docker run -d --name trojan-panel --restart always \
         --network=host \
         -v ${WEB_PATH}:${TROJAN_PANEL_WEBFILE} \
@@ -1173,7 +1173,7 @@ install_trojan_panel() {
         -e "redis_port=${redis_port}" \
         -e "redis_pass=${redis_pass}" \
         -e "server_port=${trojan_panel_port}" \
-        ghcr.io/howellxuking/x-panel
+        ghcr.io/howellxuking/xwarp
 
     if [[ -n $(docker ps -q -f "name=^trojan-panel$" -f "status=running") ]]; then
       echo_content skyBlue "---> XWarp Backend installation completed"
@@ -1319,14 +1319,14 @@ update_trojan_panel_ui() {
     echo_content green "---> Update XWarp Frontend"
 
     docker rm -f trojan-panel-ui &&
-      docker rmi -f ghcr.io/howellxuking/x-panel-ui
+      docker rmi -f ghcr.io/howellxuking/xwarp-ui
 
-    docker pull ghcr.io/howellxuking/x-panel-ui &&
+    docker pull ghcr.io/howellxuking/xwarp-ui &&
       docker run -d --name trojan-panel-ui --restart always \
         --network=host \
         -v "${UI_NGINX_CONFIG}":"/etc/nginx/conf.d/default.conf" \
         -v ${CERT_PATH}:${CERT_PATH} \
-        ghcr.io/howellxuking/x-panel-ui
+        ghcr.io/howellxuking/xwarp-ui
 
     if [[ -n $(docker ps -q -f "name=^trojan-panel-ui$" -f "status=running") ]]; then
       echo_content skyBlue "---> XWarp Frontend update completed"
@@ -1370,9 +1370,9 @@ update_trojan_panel() {
     docker exec trojan-panel-redis redis-cli -h "${redis_host}" -p "${redis_port}" -a "${redis_pass}" -e "flushall" &>/dev/null
 
     docker rm -f trojan-panel &&
-      docker rmi -f ghcr.io/howellxuking/x-panel
+      docker rmi -f ghcr.io/howellxuking/xwarp
 
-    docker pull ghcr.io/howellxuking/x-panel &&
+    docker pull ghcr.io/howellxuking/xwarp &&
       docker run -d --name trojan-panel --restart always \
         --network=host \
         -v ${WEB_PATH}:${TROJAN_PANEL_WEBFILE} \
@@ -1388,7 +1388,7 @@ update_trojan_panel() {
         -e "redis_port=${redis_port}" \
         -e "redis_pass=${redis_pass}" \
         -e "server_port=${trojan_panel_port}" \
-        ghcr.io/howellxuking/x-panel
+        ghcr.io/howellxuking/xwarp
 
     if [[ -n $(docker ps -q -f "name=^trojan-panel$" -f "status=running") ]]; then
       echo_content skyBlue "---> XWarp backend update completed"
@@ -1538,7 +1538,7 @@ uninstall_trojan_panel_ui() {
     echo_content green "---> Uninstall XWarp Frontend"
 
     docker rm -f trojan-panel-ui &&
-      docker rmi -f ghcr.io/howellxuking/x-panel-ui &&
+      docker rmi -f ghcr.io/howellxuking/xwarp-ui &&
       rm -rf ${TROJAN_PANEL_UI_DATA}
 
     echo_content skyBlue "---> XWarp Frontend uninstallation completed"
@@ -1553,7 +1553,7 @@ uninstall_trojan_panel() {
     echo_content green "---> Uninstall XWarp Backend"
 
     docker rm -f trojan-panel &&
-      docker rmi -f ghcr.io/howellxuking/x-panel &&
+      docker rmi -f ghcr.io/howellxuking/xwarp &&
       rm -rf ${TROJAN_PANEL_DATA}
 
     echo_content skyBlue "---> XWarp Backend uninstallation completed"
@@ -1582,7 +1582,7 @@ uninstall_all() {
   echo_content green "---> Uninstall all XWarp related containers"
 
   docker rm -f $(docker ps -a -q -f "name=^trojan-panel")
-  docker rmi -f $(docker images | grep "^ghcr.io/howellxuking/x-panel" | awk '{print $3}')
+  docker rmi -f $(docker images | grep "^ghcr.io/howellxuking/xwarp" | awk '{print $3}')
   rm -rf ${TP_DATA}
 
   echo_content skyBlue "---> Uninstall all XWarp related containers completed"

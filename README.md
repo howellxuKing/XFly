@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://raw.githubusercontent.com/howellxuKing/x-panel-ui/main/public/logo.png" width="120" alt="XWarp" />
+<img src="https://raw.githubusercontent.com/howellxuKing/xwarp-ui/main/public/logo.png" width="120" alt="XWarp" />
 <h1>XWarp</h1>
 <p>XWarp 一键安装脚本 —— 一条命令部署面板（后端 / 前端 / 内核 / 证书 / 伪装站）</p>
 </div>
@@ -13,7 +13,7 @@ CentOS 7+ / Ubuntu 18+ / Debian 10+（x86_64 / arm64）
 ## 一键安装
 
 ```bash
-source <(curl -L https://raw.githubusercontent.com/howellxuKing/xfly/main/install_script.sh)
+source <(curl -L https://raw.githubusercontent.com/howellxuKing/xwarp-install/main/install_script.sh)
 ```
 
 按提示依次选择：
@@ -30,8 +30,8 @@ source <(curl -L https://raw.githubusercontent.com/howellxuKing/xfly/main/instal
 
 ## 安装内容
 
-- XWarp UI：`ghcr.io/howellxuking/x-panel-ui`
-- XWarp Backend：`ghcr.io/howellxuking/x-panel`
+- XWarp UI：`ghcr.io/howellxuking/xwarp-ui`
+- XWarp Backend：`ghcr.io/howellxuking/xwarp`
 - Core（内核）：`jonssonyan/trojan-panel-core`
 - Nginx / Caddy2（证书 + 伪装） / MariaDB / Redis
 
