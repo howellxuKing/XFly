@@ -96,9 +96,9 @@ init_var() {
 
   # Version
   trojan_panel_ui_current_version=""
-  trojan_panel_ui_latest_version="v2.4.1"
+  trojan_panel_ui_latest_version="v2.4.2"
   trojan_panel_current_version=""
-  trojan_panel_latest_version="v2.4.1"
+  trojan_panel_latest_version="v2.4.2"
   trojan_panel_core_current_version=""
   trojan_panel_core_latest_version="v2.3.1"
 
